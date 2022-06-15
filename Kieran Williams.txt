@@ -1,0 +1,98 @@
+// https://docs.cypress.io/guides/getting-started/writing-your-first-test#Write-your-first-test
+describe('My First Test', () => {
+  it('Does not do much!', () => {
+    expect(true).to.equal(true);
+  });
+});
+
+
+describe('It can add a box', () => {
+  it('has the correct number inside', () => {
+    cy.visit('http://localhost:3000');
+
+    cy.get('.addBtn').click();
+    cy.get('.addBtn').click();
+
+    cy.get('.boxes > :nth-child(2)').contains(1);
+  });
+});
+
+
+// -------------------------------1--------------------------------
+
+// Remove box functionality
+describe('It can remove a box', () => {
+  it('box removed after clicking remove button', () => {
+    cy.visit('http://localhost:3000');
+
+    cy.get('.addBtn').click();
+    cy.get('.addBtn').click();
+    cy.get('.removeBtn').click();
+
+    cy.get('.boxes > :nth-child(2)').should('not.exist');
+  });
+});
+
+// Error Message When Remove Button is click with no boxes
+describe('When there are no boxes and the remove button is clicked', () => {
+  it('the correct error message should display', () => {
+    cy.visit('http://localhost:3000');
+    
+    cy.get('.removeBtn').click();
+
+    cy.get('.errorMsg > :nth-child(1)').contains('Error: Can\'t Process Request');
+  });
+});
+
+// Disable Remove Button if no boxes added
+describe('When there are no boxes', () => {
+  it('remove button should be disabled - functionality does not exist yet', () => {
+    cy.visit('http://localhost:3000');
+
+    cy.get('.removeBtn').should('be.disabled')
+  });
+});
+
+
+// -------------------------------2--------------------------------
+
+// User Can Add 20 boxes
+describe('User can add up to 20 boxes', () => {
+  it('number inside is 19', () => {
+    cy.visit('http://localhost:3000')
+    
+    for (let i = 0; i < 20; i++) {
+  	cy.get('.addBtn').click();
+    }
+    
+    cy.get('.boxes > :nth-child(20)').contains(19);
+  });
+});
+
+// Disable Add Box Button after 20 boxes Added
+describe('When 20 boxes are added', () => {
+  it('add box button should be disabled', () => {
+    cy.visit('http://localhost:3000');
+
+    for (let i = 0; i < 20; i++) {
+  	cy.get('.addBtn').click();
+    }
+    
+    cy.get('.addBtn').should('be.disabled')
+  });
+});
+
+
+// -------------------------------3--------------------------------
+
+// https://docs.cypress.io/guides/getting-started/testing-your-app
+describe('The Home Page', () => {
+  it('successfully loads', () => {
+    cy.visit('http://localhost:3000');
+
+    cy.get('h1').should('contain', 'QA Exercise');
+  });
+});
+
+
+
